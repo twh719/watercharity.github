@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drops of Hope</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(to bottom, #b3e0f2, #ffffff);
+      color: #1e3c4a;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #0077cc;
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      color: #1e3c4a;
+      margin-bottom: 0.5rem;
+    }
+
+    .section {
+      background: #fefefe;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .stat {
+      background: #e0f7fa;
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    #game-area {
+      position: relative;
+      background: #b8f7ca;
+      border-radius: 1rem;
+      text-align: center;
+      width: 90%;
+      max-width: 900px;
+      height: 600px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    #game-area > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .droplet {
+      position: absolute;
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+      animation: fall linear;
+    }
+
+    @keyframes fall {
+      0% {
+        top: -50px;
+        opacity: 1;
+      }
+      100% {
+        top: 650px;
+        opacity: 0.5;
+      }
+    }
+
+    #startBtn, #pauseBtn {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      margin: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    #startBtn:hover, #pauseBtn:hover {
+      background: #005fa3;
+    }
+
+    .quiz-section {
+      text-align: center;
+    }
+
+    .quiz-options button {
+      background: #e0f7fa;
+      border: none;
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .quiz-options button:hover {
+      background: #b2ebf2;
+    }
+
+    .btn-close {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .why-it-matters {
+      background: #dff6ff;
+      margin-top: 1rem;
+      border-radius: 6px;
+    }
+
+    /* Center the How to Play section vertically and horizontally */
+    .centered-instructions-wrapper {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(179, 224, 242, 0.95); /* #b3e0f2 with opacity */
+      z-index: 10000;
+    }
+    .centered-instructions {
+      background: #fefefe;
+      border-radius: 1rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .centered-instructions h2 {
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+    }
+    .centered-instructions .howto-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+      font-size: 1.15rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .centered-instructions button {
+      background: #0077cc;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      transition: background 0.3s;
+    }
+    .centered-instructions button:hover {
+      background: #005fa3;
+    }
+
+    /* Quiz answer button styles for popup */
+    .quiz-btn {
+      background: #0077cc !important;
+      color: #fff !important;
+      border: none;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      margin: 0 12px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .quiz-btn:hover:enabled {
+      background: #005fa3 !important;
+      transform: scale(1.08);
+    }
+    .quiz-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 600px) {
+      .centered-instructions {
+        padding: 1.2rem 0.5rem;
+        max-width: 95vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>💧 Drops of Hope</h1>
+  <p>Help deliver clean water and make a real impact!</p>
+
+  <!-- Centered How to Play Instructions -->
+  <div class="centered-instructions-wrapper" id="howToPlayModal">
+    <div class="centered-instructions">
+      <h2>🎮 How to Play</h2>
+      <div class="howto-lines">
+        <div>Click blue drops 💧 to collect clean water.</div>
+        <div>Avoid red drops 🛑 – they decrease your score.</div>
+        <div>Catch green super drops 🪴 for a big boost!</div>
+        <div>Reach the goal before time runs out!</div>
+      </div>
+      <button id="closeHowToPlay">Start Game</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>➕ How to Play</h2>
+    <ul style="list-style: none; padding: 0;">
+      <li>Click blue drops 💧 to collect clean water.</li>
+      <li>Avoid red drops 🛑 – they decrease your score.</li>
+      <li>Catch green super drops 🪴 for a big boost!</li>
+      <li>Reach the goal before time runs out!</li>
+    </ul>
+    <div class="stats">
+      <div class="stat">💧 Water Collected: <span id="score">5</span></div>
+      <div class="stat">🪴 Filters Provided: <span id="filters">1</span></div>
+      <div class="stat">⏳ Time Left: <span id="time">20s</span></div>
+      <div class="stat">🎯 Goal: <span id="goal">15</span> Points</div>
+      <div class="stat">🔢 Level: <span id="level">1</span></div>
+    </div>
+  </div>
+
+  <div class="section" id="game-area">
+    <h2>🕹️ Catch the Droplets!</h2>
+    <div style="margin-top: 1rem;">
+      <button id="startBtn">▶️ Start Game</button>
+      <button id="pauseBtn" style="display:none;">⏸️ Pause</button>
+    </div>
+  </div>
+
+  <div class="section quiz-section">
+    <h2>🌍 Quick Quiz!</h2>
+    <p>✅ Correct! About 1 in 10 people don’t have clean water.</p>
+    <div class="quiz-options">
+      <button>1 in 50</button>
+      <button style="background: #0077cc; color: white;">1 in 10</button>
+      <button>1 in 3</button>
+    </div>
+    <button class="btn-close">Close</button>
+  </div>
+
+  <div class="section why-it-matters">
+    <h2>🌍 Why It Matters</h2>
+    <p>
+      For every 1 in 10 people, you're doing more than scoring points — you're raising awareness, sparking conversations, and helping build a ripple of change. Every drop you collect represents hope for communities in need.
+    </p>
+  </div>
+
+  <script>
+    let score = 0; // Start at 0, but don't trigger game over on load
+    let filters = 1;
+    let level = 1;
+    let timeLeft = 20;
+    let goal = 15;
+    let timerInterval;
+    let dropletInterval;
+    let isPaused = false;
+    let hasStarted = false; // Track if the player has started playing
+    const emojis = ["💧", "🪴", "🛑"];
+    const gameArea = document.getElementById("game-area");
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+
+    function updateStats() {
+      document.getElementById("score").textContent = score;
+      document.getElementById("filters").textContent = Math.floor(score / 5);
+      document.getElementById("level").textContent = level;
+      document.getElementById("goal").textContent = goal;
+
+      // Only show game over if the game has started, the player has scored above 0 at least once, and score drops to 0 or below
+      if (
+        hasStarted &&
+        score <= 0 &&
+        !document.getElementById("resumeBtn") &&
+        (typeof updateStats.hasScoredAboveZero === "undefined" || updateStats.hasScoredAboveZero)
+      ) {
+        showGameOverPopup();
+        clearInterval(timerInterval);
+        clearInterval(dropletInterval);
+        return;
+      }
+
+      // Track if the player has ever scored above 0 in this round
+      if (score > 0) {
+        updateStats.hasScoredAboveZero = true;
+      }
+
+      // Show level up popup immediately when score reaches goal
+      if (score >= goal && !document.getElementById("nextLevelBtn")) {
+        showLevelUpPopup();
+        clearInterval(timerInterval);
+        clearInterval(dropletInterval);
+        // Reset the flag for the next level
+        updateStats.hasScoredAboveZero = false;
+      }
+    }
+
+    function startGame() {
+      hasStarted = true; // Mark that the player has started
+      updateStats.hasScoredAboveZero = false; // Reset for new round/level
+      startBtn.style.display = "none"; // Hide Start button
+      pauseBtn.style.display = "inline-block"; // Show Pause/Resume button
+      pauseBtn.textContent = "⏸️ Pause";
+      pauseBtn.disabled = false;
+      updateStats();
+
+      timerInterval = setInterval(() => {
+        if (!isPaused) {
+          timeLeft--;
+          document.getElementById("time").textContent = timeLeft + "s";
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            clearInterval(dropletInterval);
+            endGame(); // This will now show the Game Over popup with Resume
+          }
+        }
+      }, 1000);
+
+      dropletInterval = setInterval(() => {
+        if (!isPaused) spawnDroplet();
+      }, 800);
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      pauseBtn.textContent = isPaused ? "▶️ Resume" : "⏸️ Pause";
+      // Pause or resume all droplets
+      document.querySelectorAll('.droplet').forEach(droplet => {
+        droplet.style.animationPlayState = isPaused ? 'paused' : 'running';
+      });
+    }
+
+    function endGame() {
+      // Always show Game Over popup when time runs out or score is too low
+      showGameOverPopup();
+    }
+
+    // Add this function below endGame()
+    function showLevelUpPopup() {
+      // Create overlay
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = "100vw";
+      overlay.style.height = "100vh";
+      overlay.style.background = "rgba(0, 123, 255, 0.15)";
+      overlay.style.display = "flex";
+      overlay.style.alignItems = "center";
+      overlay.style.justifyContent = "center";
+      overlay.style.zIndex = 20000;
+
+      // Create popup box
+      const popup = document.createElement("div");
+      popup.style.background = "#fff";
+      popup.style.padding = "2rem 2.5rem";
+      popup.style.borderRadius = "1rem";
+      popup.style.boxShadow = "0 4px 24px rgba(0,0,0,0.15)";
+      popup.style.textAlign = "center";
+
+      // If player just finished level 3, show quiz
+      if (level === 3) {
+        popup.innerHTML = `
+          <h2 style="color:#0077cc; margin-bottom:1rem;">🌍 Quick Quiz!</h2>
+          <p style="font-size:1.2rem; margin-bottom:1.5rem;">
+            About <span style="font-weight:bold;">_</span> in <span style="font-weight:bold;">__</span> people don’t have access to clean water.
+          </p>
+          <div style="margin-bottom:1.5rem; display:flex; justify-content:center; gap:18px;">
+            <button class="quiz-btn" data-answer="1 in 50">1 in 50</button>
+            <button class="quiz-btn" data-answer="1 in 10">1 in 10</button>
+            <button class="quiz-btn" data-answer="1 in 3">1 in 3</button>
+          </div>
+          <div id="quiz-result" style="font-size:1.1rem; margin-bottom:1.2rem;"></div>
+          <button id="nextLevelBtn" style="
+            background:#0077cc; color:white; border:none; border-radius:8px;
+            padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
+            display:none;
+          ">Continue</button>
+        `;
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        // Quiz logic
+        const correctAnswer = "1 in 10";
+        popup.querySelectorAll('.quiz-btn').forEach(btn => {
+          btn.onclick = function() {
+            const resultDiv = document.getElementById("quiz-result");
+            if (btn.getAttribute("data-answer") === correctAnswer) {
+              resultDiv.innerHTML = "✅ Correct! About 1 in 10 people don’t have access to clean water.";
+            } else {
+              resultDiv.innerHTML = "❌ Wrong. The correct answer is <b>1 in 10</b>.";
+            }
+            // Show continue button after answer
+            document.getElementById("nextLevelBtn").style.display = "inline-block";
+            // Disable all quiz buttons
+            popup.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+          };
+        });
+
+        document.getElementById("nextLevelBtn").onclick = function() {
+          overlay.remove();
+
+          // Show "Why It Matters" popup
+          const whyOverlay = document.createElement("div");
+          whyOverlay.style.position = "fixed";
+          whyOverlay.style.top = 0;
+          whyOverlay.style.left = 0;
+          whyOverlay.style.width = "100vw";
+          whyOverlay.style.height = "100vh";
+          whyOverlay.style.background = "rgba(0, 123, 255, 0.15)";
+          whyOverlay.style.display = "flex";
+          whyOverlay.style.alignItems = "center";
+          whyOverlay.style.justifyContent = "center";
+          whyOverlay.style.zIndex = 20000;
+
+          const whyPopup = document.createElement("div");
+          whyPopup.style.background = "#fff";
+          whyPopup.style.padding = "2rem 2.5rem";
+          whyPopup.style.borderRadius = "1rem";
+          whyPopup.style.boxShadow = "0 4px 24px rgba(0,0,0,0.15)";
+          whyPopup.style.textAlign = "center";
+          whyPopup.innerHTML = `
+            <h2 style="color:#0077cc; margin-bottom:1rem;">🌍 Why It Matters</h2>
+            <p style="font-size:1.2rem; margin-bottom:1.5rem;">
+              For every 1 in 10 people, you're doing more than scoring points — you're raising awareness, sparking conversations, and helping build a ripple of change. Every drop you collect represents hope for communities in need.
+            </p>
+            <button id="restartBtn" style="
+              background:#0077cc; color:white; border:none; border-radius:8px;
+              padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
+            ">Restart</button>
+          `;
+          whyOverlay.appendChild(whyPopup);
+          document.body.appendChild(whyOverlay);
+
+          document.getElementById("restartBtn").onclick = function() {
+            whyOverlay.remove();
+            document.getElementById("howToPlayModal").style.display = "flex";
+            // Reset game state
+            score = 0;
+            level = 1;
+            goal = 15;
+            timeLeft = 20;
+            hasStarted = false;
+            updateStats();
+            document.getElementById("time").textContent = timeLeft + "s";
+            // Hide game buttons until instructions are closed
+            startBtn.style.display = "none";
+            pauseBtn.style.display = "none";
+          };
+        };
+        return;
+      }
+
+      // Normal level up popup for other levels
+      popup.innerHTML = `
+        <h2 style="color:#0077cc; margin-bottom:1rem;">🎉 Congratulations!</h2>
+        <p style="font-size:1.2rem; margin-bottom:1.5rem;">
+          You collected enough water!<br>
+          You can now go to the next level.
+        </p>
+        <button id="nextLevelBtn" style="
+          background:#0077cc; color:white; border:none; border-radius:8px;
+          padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
+        ">Next Level</button>
+      `;
+      overlay.appendChild(popup);
+      document.body.appendChild(overlay);
+
+      document.getElementById("nextLevelBtn").onclick = function() {
+        level++;
+        goal += 10;
+        timeLeft = 20 + (level - 1) * 10; // Increase time by 10 seconds each level
+        score = 0;
+        hasStarted = false; // Reset for next level
+        updateStats();
+        document.getElementById("time").textContent = timeLeft + "s";
+        overlay.remove();
+        startGame();
+      };
+    }
+
+    // Add this function for game over popup
+    function showGameOverPopup() {
+      // Create overlay
+      const overlay = document.createElement("div");
+      overlay.style.position = "fixed";
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = "100vw";
+      overlay.style.height = "100vh";
+      overlay.style.background = "rgba(255, 0, 0, 0.10)";
+      overlay.style.display = "flex";
+      overlay.style.alignItems = "center";
+      overlay.style.justifyContent = "center";
+      overlay.style.zIndex = 20000;
+
+      // Create popup box
+      const popup = document.createElement("div");
+      popup.style.background = "#fff";
+      popup.style.padding = "2rem 2.5rem";
+      popup.style.borderRadius = "1rem";
+      popup.style.boxShadow = "0 4px 24px rgba(0,0,0,0.15)";
+      popup.style.textAlign = "center";
+      popup.innerHTML = `
+        <h2 style="color:#d32f2f; margin-bottom:1rem;">💧 Game Over</h2>
+        <p style="font-size:1.2rem; margin-bottom:1.5rem;">
+          Your water collected dropped to zero.<br>
+          Would you like to try again?
+        </p>
+        <button id="resumeBtn" style="
+          background:#0077cc; color:white; border:none; border-radius:8px;
+          padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
+        ">Resume</button>
+      `;
+
+      overlay.appendChild(popup);
+      document.body.appendChild(overlay);
+
+      document.getElementById("resumeBtn").onclick = function() {
+        // Reset score, time, and remove popup, then restart game
+        score = 5;
+        timeLeft = 20;
+        hasStarted = false; // Reset for retry
+        updateStats();
+        document.getElementById("time").textContent = timeLeft + "s";
+        overlay.remove();
+        startGame();
+      };
+    }
+
+    function spawnDroplet() {
+      const droplet = document.createElement("div");
+      const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+      droplet.textContent = emoji;
+      droplet.classList.add("droplet");
+      droplet.style.fontSize = (40 + Math.random() * 20) + "px";
+      droplet.style.left = Math.random() * 90 + "%";
+      droplet.style.animationDuration = (3 + Math.random() * 2) + "s";
+      droplet.style.animationPlayState = isPaused ? 'paused' : 'running'; // <-- add this
+
+      droplet.addEventListener("click", () => {
+        if (isPaused) return;
+        if (emoji === "💧") {
+          score++;
+        } else if (emoji === "🛑") {
+          score--;
+        } else if (emoji === "🪴") {
+          score += 5;
+        }
+        updateStats();
+        droplet.remove();
+      });
+
+      gameArea.appendChild(droplet);
+
+      setTimeout(() => {
+        if (droplet.parentNode) {
+          droplet.remove();
+        }
+      }, parseFloat(droplet.style.animationDuration) * 1000);
+    }
+
+    startBtn.addEventListener("click", startGame);
+    pauseBtn.addEventListener("click", togglePause);
+
+    document.getElementById("closeHowToPlay").addEventListener("click", () => {
+      document.getElementById("howToPlayModal").style.display = "none";
+      startGame();
+    });
+
+    // Show the how to play modal initially
+    document.getElementById("howToPlayModal").style.display = "flex";
+  </script>
+</body>
+</html>
