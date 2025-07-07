@@ -1,0 +1,152 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(to bottom, #b3e0f2, #ffffff);
+  color: #1e3c4a;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Heading Styles */
+h1 {
+  font-size: 2.5rem;
+  color: #0077cc;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+h2 {
+  color: #1e3c4a;
+  margin-bottom: 0.5rem;
+}
+
+/* Section Layout */
+.section {
+  background: #fefefe;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.stat {
+  background: #e0f7fa;
+  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-grow: 1;
+  justify-content: center;
+  min-width: 48%;
+}
+
+/* Game Area */
+.game-area {
+  background: #d4f2e6;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+/* Droplets */
+.droplets {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.droplet {
+  width: 50px;
+  height: 50px;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.droplet:hover {
+  transform: scale(1.2);
+}
+
+/* Quiz Section */
+.quiz-section {
+  text-align: center;
+}
+
+.quiz-options button {
+  background: #e0f7fa;
+  border: none;
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.quiz-options button:hover {
+  background: #b2ebf2;
+}
+
+/* Active Quiz Option */
+.quiz-options button.active {
+  background: #0077cc;
+  color: white;
+}
+
+/* Close Button */
+.btn-close {
+  background: #0077cc;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Why It Matters */
+.why-it-matters {
+  background: #dff6ff;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .stat {
+    min-width: 100%;
+  }
+
+  .droplets {
+    gap: 0.75rem;
+  }
+
+  .droplet {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+  }
+}
