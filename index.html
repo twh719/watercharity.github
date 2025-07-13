@@ -105,7 +105,7 @@
       }
     }
 
-    #startBtn, #pauseBtn {
+    #startBtn, #pauseBtn, #resetBtn {
       background: #0077cc;
       color: white;
       border: none;
@@ -115,9 +115,10 @@
       cursor: pointer;
       font-size: 1rem;
       transition: background 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    #startBtn:hover, #pauseBtn:hover {
+    #startBtn:hover, #pauseBtn:hover, #resetBtn:hover {
       background: #005fa3;
     }
 
@@ -274,9 +275,10 @@
 
   <div class="section" id="game-area">
     <h2>🕹️ Catch the Droplets!</h2>
-    <div style="margin-top: 1rem;">
+    <div style="margin-top: 1rem; display: flex; justify-content: center; gap: 1rem;">
       <button id="startBtn">▶️ Start Game</button>
       <button id="pauseBtn" style="display:none;">⏸️ Pause</button>
+      <button id="resetBtn" style="display:none;">🔄 Reset</button>
     </div>
   </div>
 
@@ -312,6 +314,7 @@
     const gameArea = document.getElementById("game-area");
     const startBtn = document.getElementById("startBtn");
     const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
     function updateStats() {
       document.getElementById("score").textContent = score;
@@ -352,6 +355,7 @@
       updateStats.hasScoredAboveZero = false; // Reset for new round/level
       startBtn.style.display = "none"; // Hide Start button
       pauseBtn.style.display = "inline-block"; // Show Pause/Resume button
+      resetBtn.style.display = "inline-block"; // Show Reset button
       pauseBtn.textContent = "⏸️ Pause";
       pauseBtn.disabled = false;
       updateStats();
@@ -427,7 +431,15 @@
             background:#0077cc; color:white; border:none; border-radius:8px;
             padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
             display:none;
+            margin-bottom: 0.7rem;
           ">Continue</button>
+          <a id="makeADifferenceBtn" href="https://www.charitywater.org/" target="_blank" style="
+            background:#0077cc; color:white; border:none; border-radius:8px;
+            padding:0.7rem 2rem; font-size:1.1rem; cursor:pointer; transition:background 0.3s;
+            text-decoration:none; display:none;
+            margin-bottom: 0.7rem;
+            display: inline-block;
+          ">Make a Difference</a>
         `;
         overlay.appendChild(popup);
         document.body.appendChild(overlay);
@@ -442,8 +454,9 @@
             } else {
               resultDiv.innerHTML = "❌ Wrong. The correct answer is <b>1 in 10</b>.";
             }
-            // Show continue button after answer
+            // Show continue and Make a Difference buttons after answer
             document.getElementById("nextLevelBtn").style.display = "inline-block";
+            document.getElementById("makeADifferenceBtn").style.display = "inline-block";
             // Disable all quiz buttons
             popup.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
           };
@@ -451,7 +464,6 @@
 
         document.getElementById("nextLevelBtn").onclick = function() {
           overlay.remove();
-
           // Show "Why It Matters" popup
           const whyOverlay = document.createElement("div");
           whyOverlay.style.position = "fixed";
@@ -622,6 +634,23 @@
 
     // Show the how to play modal initially
     document.getElementById("howToPlayModal").style.display = "flex";
+
+    // Reset button logic
+    resetBtn.addEventListener("click", () => {
+      score = 0;
+      filters = 1;
+      timeLeft = 20 + (level - 1) * 10; // Keep current level and time logic
+      updateStats();
+      document.getElementById("time").textContent = timeLeft + "s";
+      // Remove all droplets
+      document.querySelectorAll('.droplet').forEach(d => d.remove());
+      // Clear intervals and restart game
+      clearInterval(timerInterval);
+      clearInterval(dropletInterval);
+      isPaused = false;
+      pauseBtn.textContent = "⏸️ Pause";
+      startGame();
+    });
   </script>
 </body>
 </html>
