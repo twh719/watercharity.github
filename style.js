@@ -110,3 +110,30 @@ closeQuizBtn.addEventListener("click", () => {
   updateStats();
   startTimer();
 });
+
+// === Add Reset Button ===
+const resetBtn = document.createElement("button");
+resetBtn.textContent = "Reset";
+resetBtn.style.background = "#0077cc";
+resetBtn.style.color = "#fff";
+resetBtn.style.border = "none";
+resetBtn.style.borderRadius = "8px";
+resetBtn.style.padding = "0.7rem 2rem";
+resetBtn.style.fontSize = "1.1rem";
+resetBtn.style.cursor = "pointer";
+resetBtn.style.margin = "1rem auto";
+resetBtn.style.display = "block";
+
+// Insert the button into the DOM (e.g., after the quiz section)
+document.body.insertBefore(resetBtn, quizSection.nextSibling);
+
+// Reset button logic
+resetBtn.addEventListener("click", () => {
+  score = 5;
+  filters = 1;
+  timeLeft = 19;
+  level = 1;
+  updateStats();
+  quizSection.style.display = "none";
+  clearInterval(timerInterval);
+  startTimer();
