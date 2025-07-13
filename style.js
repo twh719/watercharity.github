@@ -137,3 +137,4 @@ resetBtn.addEventListener("click", () => {
   quizSection.style.display = "none";
   clearInterval(timerInterval);
   startTimer();
+});
